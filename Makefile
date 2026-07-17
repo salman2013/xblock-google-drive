@@ -79,10 +79,10 @@ compile_translations: ## compile translation files, outputting .mo files for eac
 	make clean
 
 detect_changed_source_translations: ## Determines if the source translation files are up-to-date, otherwise exit with a non-zero code.
-	i18n_tool changed
+	cd $(WORKING_DIR) && i18n_tool changed
 
 dummy_translations: ## generate dummy translation (.po) files
-	i18n_tool dummy
+	cd $(WORKING_DIR) && i18n_tool dummy
 
 build_dummy_translations: extract_translations dummy_translations compile_translations ## generate and compile dummy translation files
 

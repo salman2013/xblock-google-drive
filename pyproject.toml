@@ -46,7 +46,6 @@ google_drive = [
     "static/**/*",
     "templates/**/*",
     "public/**/*",
-    "translations/**/*",
     "conf/**/*",
 ]
 
