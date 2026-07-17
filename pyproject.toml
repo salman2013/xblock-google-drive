@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools", "setuptools-scm>8.1"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "xblock-google-drive"
@@ -54,6 +54,61 @@ google_drive = [
 
 [tool.uv]
 package = true
+# Conflicts are needed because test and django42 both pin a Django version.
+# To add a new Django version: add a new group (e.g. django60), add it to
+# conflicts, and add a corresponding tox env.
+conflicts = [
+    [{group = "test"}, {group = "django42"}],
+]
+
+[dependency-groups]
+# Base test dependencies (no Django pin — included by versioned groups)
+test-base = [
+    "ddt",
+    "mock",
+    "pytest",
+    "pytest-cov",
+    "pytest-django",
+    "xblock-sdk",
+    "edx-i18n-tools",
+]
+# Default test env: Django 5.2
+test = [
+    {include-group = "test-base"},
+    "Django>=5.2,<6.0",
+]
+# Legacy Django 4.2 test env
+django42 = [
+    {include-group = "test-base"},
+    "Django>=4.2,<4.3",
+]
+quality = [
+    {include-group = "test"},
+    "caniusepython3",
+    "edx-lint",
+    "isort",
+    "pycodestyle",
+    "pydocstyle",
+]
+# Minimal CI group: just enough to install tox and run uv run tox
+ci = [
+    "tox",
+    "tox-uv",
+]
+dev = [
+    {include-group = "test"},
+    {include-group = "quality"},
+    {include-group = "ci"},
+    "diff-cover",
+    "pypng",
+]
+package = [
+    "build",
+    "twine",
+]
+
+[tool.edx_lint]
+uv_constraints = []
 
 [tool.isort]
 indent = "    "
