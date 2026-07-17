@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm>8.1"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "xblock-google-drive"
+dynamic = ["version"]
+description = "An XBlock which allows embedding of Google documents and calendar within an edX course"
+readme = "README.rst"
+license = "AGPL-3.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
+]
+dependencies = [
+    "Django>=4.2",
+    "requests",
+    "XBlock[django]",
+]
+
+[project.entry-points."xblock.v1"]
+google-document = "google_drive:GoogleDocumentBlock"
+google-calendar = "google_drive:GoogleCalendarBlock"
+
+[project.urls]
+Homepage = "https://github.com/openedx/xblock-google-drive"
+
+[tool.setuptools_scm]
+version_scheme = "only-version"
+local_scheme = "no-local-version"
+# Dummy version number for when .git isn't accessible.
+# This happens, for example, when bind-mounting into a Docker image.
+fallback_version = "0.0.0.dev0"
+
+[tool.setuptools.packages.find]
+include = ["google_drive*"]
+
+[tool.setuptools.package-data]
+google_drive = [
+    "static/**/*",
+    "templates/**/*",
+    "public/**/*",
+    "translations/**/*",
+    "conf/**/*",
+]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["tests*", "*.tests*", "spec*", "*.spec*"]
+
+[tool.uv]
+package = true
+
+[tool.isort]
+indent = "    "
+line_length = 120
+multi_line_output = 3
+known_first_party = ["google_drive"]
+
+[tool.coverage.run]
+branch = true
+source = ["google_drive"]
+omit = [
+    "*/tests/*",
+    "*/migrations/*",
+    "*/__pycache__/*",
+    "*/settings.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
